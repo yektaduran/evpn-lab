@@ -19,11 +19,63 @@ topology:
       binds:
         - configs/daemons:/etc/frr/daemons
         - configs/leaf1.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add tenant-a type vrf table 1000
+        - ip link set tenant-a up
+        - ip link add br1000 type bridge
+        - ip link set br1000 address 00:00:00:00:00:11
+        - ip link set br1000 master tenant-a
+        - ip link add vni1000 type vxlan id 1000 dstport 4789 local 10.0.0.11 nolearning
+        - ip link set vni1000 master br1000
+        - ip link set vni1000 up
+        - ip link set br1000 up
+        - ip link add br10 type bridge
+        - ip link set br10 address 00:00:00:00:10:11
+        - ip link set br10 master tenant-a
+        - ip link add vni10 type vxlan id 10 dstport 4789 local 10.0.0.11 nolearning
+        - ip link set vni10 master br10
+        - ip link set vni10 up
+        - ip link set br10 up
+        - ip addr replace 192.168.10.11/24 dev br10
+        - ip link add br20 type bridge
+        - ip link set br20 address 00:00:00:00:20:11
+        - ip link set br20 master tenant-a
+        - ip link add vni20 type vxlan id 20 dstport 4789 local 10.0.0.11 nolearning
+        - ip link set vni20 master br20
+        - ip link set vni20 up
+        - ip link set br20 up
+        - ip addr replace 192.168.20.11/24 dev br20
     leaf2:
       kind: linux
       binds:
         - configs/daemons:/etc/frr/daemons
         - configs/leaf2.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add tenant-a type vrf table 1000
+        - ip link set tenant-a up
+        - ip link add br1000 type bridge
+        - ip link set br1000 address 00:00:00:00:00:12
+        - ip link set br1000 master tenant-a
+        - ip link add vni1000 type vxlan id 1000 dstport 4789 local 10.0.0.12 nolearning
+        - ip link set vni1000 master br1000
+        - ip link set vni1000 up
+        - ip link set br1000 up
+        - ip link add br10 type bridge
+        - ip link set br10 address 00:00:00:00:10:12
+        - ip link set br10 master tenant-a
+        - ip link add vni10 type vxlan id 10 dstport 4789 local 10.0.0.12 nolearning
+        - ip link set vni10 master br10
+        - ip link set vni10 up
+        - ip link set br10 up
+        - ip addr replace 192.168.10.12/24 dev br10
+        - ip link add br20 type bridge
+        - ip link set br20 address 00:00:00:00:20:12
+        - ip link set br20 master tenant-a
+        - ip link add vni20 type vxlan id 20 dstport 4789 local 10.0.0.12 nolearning
+        - ip link set vni20 master br20
+        - ip link set vni20 up
+        - ip link set br20 up
+        - ip addr replace 192.168.20.12/24 dev br20
   links:
     - endpoints: ["spine1:eth1", "leaf1:eth1"]
     - endpoints: ["spine1:eth2", "leaf2:eth1"]
