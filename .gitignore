@@ -1,0 +1,8 @@
+clab-*/
+.clab/
+*.bak
+*.sav
+*.swp
+*~
+*.pid
+*.log
